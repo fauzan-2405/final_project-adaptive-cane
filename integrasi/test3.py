@@ -127,7 +127,7 @@ def instruction_mode():
         motor_pwm.ChangeDutyCycle(0)
         # Delay berbasis waktu
         start_time = time.time()
-        while time.time() - start_time < 3:
+        while time.time() - start_time < 0.1:
             if mode != 'instruction':  # Respons cepat terhadap perubahan mode
                 break
             time.sleep(0.1)
@@ -149,9 +149,15 @@ def instruction_mode():
             elif submode_instruction == 'technical':
                 print("Mode Instruction: Submode Technical aktif")
                 # Memutar audio teknis secara berulang
-                play_audio('ada_objek.mp3')
+                play_audio('instruction.mp3')
                 audio_playing = True  # Set flag audio_playing ke True
 
+        while pygame.mixer.music.get_busy():  # Tunggu sampai audio selesai
+            if mode != 'instruction' or submode_instruction not in ['voltage', 'technical']:
+                print("Mode atau submode berubah, audio dihentikan.")
+                pygame.mixer.music.stop()  # Hentikan jika ada perubahan mode/submode
+                break
+            time.sleep(0.1)
         time.sleep(0.1)
 
 def button_instruction_callback(channel):
