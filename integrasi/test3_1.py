@@ -170,7 +170,7 @@ def button_instruction_callback(channel):
     instruction_event.set() # Hidupkan event instruction
     ultrasonic_event.clear()
 
-    mode = 'instruction'
+    #mode = 'instruction'
     stop_audio()
     if mode == 'instruction':
         # Toggle submode
@@ -270,18 +270,19 @@ def button_ultrasonic_callback(channel):
     instruction_event.clear()
     ultrasonic_event.set()  # Hidupkan event ultrasonik
 
-    mode = 'ultrasonic'
+    #mode = 'ultrasonic'
     stop_audio()
-    if mode == 'ultrasonic':
+    if mode != 'ultrasonic':
+        mode = 'ultrasonic'
+        if feedback_mode != 'vibrate':
+            feedback_mode = 'vibrate'  # Reset ke submode default
+        print("Mode berubah menjadi: Ultrasonik dengan submode vibrate")
+    else:
         # Toggle submode
         feedback_mode = 'audio' if feedback_mode == 'vibrate' else 'vibrate'
         if feedback_mode == "audio":
             motor_pwm.ChangeDutyCycle(0)  # Matikan motor saat beralih ke audio
         print(f"Submode Ultrasonik berubah menjadi: {feedback_mode}")
-    else:
-        mode = 'ultrasonic'
-        feedback_mode = 'vibrate'  # Reset ke submode default
-        print("Mode berubah menjadi: Ultrasonik")
 
 #------------------------------------------- Detection ---------------------------------
 class ObjectDetector:
